@@ -18,8 +18,11 @@ This plugin validates Claude's designs, code reviews, and recommendations by get
 ### As a Plugin
 
 ```bash
-# In Claude Code, install from this marketplace
-/plugin add codex-peer-review from https://github.com/jcputney/codex-peer-review
+# Add this marketplace
+/plugin marketplace add jcputney/codex-peer-review
+
+# Install the plugin
+/plugin install codex-peer-review
 ```
 
 ### Prerequisites
