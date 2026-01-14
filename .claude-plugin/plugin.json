@@ -1,0 +1,38 @@
+{
+  "name": "codex-peer-review",
+  "description": "Peer validation system using OpenAI Codex CLI. Validates Claude's designs and code reviews through structured discussion before presenting to user.",
+  "version": "1.0.0",
+  "author": {
+    "name": "jcputney"
+  },
+  "commands": [
+    {
+      "name": "codex-peer-review",
+      "description": "Trigger peer review validation with Codex CLI. Use without arguments for current changes, --base <branch> for specific branch comparison, or add a question for broad technical validation."
+    }
+  ],
+  "agents": [
+    {
+      "name": "codex-peer-reviewer",
+      "description": "Run peer review validation as a subagent. Dispatches Codex CLI validation in a separate context and returns synthesized results. Use this to keep the main conversation context clean."
+    }
+  ],
+  "skills": [
+    {
+      "name": "codex-peer-review",
+      "description": "Reference documentation for the peer review protocol. The actual validation should be dispatched to the codex-peer-reviewer agent to run in a separate context."
+    }
+  ],
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "./hooks/peer-review-reminder.sh"
+      }
+    ]
+  },
+  "dependencies": {
+    "cli": ["codex"]
+  },
+  "repository": "https://github.com/jcputney/codex-peer-review"
+}

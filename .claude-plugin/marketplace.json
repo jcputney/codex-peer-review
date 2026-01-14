@@ -1,0 +1,17 @@
+{
+  "name": "Codex Peer Review Marketplace",
+  "description": "Plugin marketplace for AI peer validation tools",
+  "owner": {
+    "name": "jcputney",
+    "url": "https://github.com/jcputney"
+  },
+  "plugins": [
+    {
+      "name": "codex-peer-review",
+      "description": "Peer validation system using OpenAI Codex CLI. Two AI perspectives catch more issues than one.",
+      "source": ".",
+      "category": "code-quality",
+      "tags": ["peer-review", "code-review", "validation", "codex", "ai-collaboration"]
+    }
+  ]
+}
