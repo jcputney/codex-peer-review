@@ -31,15 +31,40 @@ fi
 
 ### Step 2: Run Appropriate Codex Command
 
+**IMPORTANT:** Always write complex prompts to a temp file to avoid shell escaping issues.
+
 **For code review (actual diffs):**
 ```bash
-codex review --base [branch] "[focus area from Claude's review]"
+codex review --base [branch]
 ```
 
-**For design/architecture/questions:**
+**For design/architecture/questions (use Bash tool for ALL of this):**
 ```bash
-codex exec "Validate this [type]: [summary of Claude's position]. Check for issues, alternatives, and missing considerations."
+# 1. Write prompt to temp file using Bash (NOT the Write tool)
+#    This works even in plan mode since it's a shell redirect
+PROMPT_FILE=$(mktemp /tmp/codex-prompt-XXXXXX.md)
+cat > "$PROMPT_FILE" <<'PROMPT_EOF'
+## Validation Request
+
+[Claude's position/design/recommendation goes here - can include
+multiline content, code blocks, special characters, etc.]
+
+## Your Task
+
+1. Identify any issues, risks, or gaps
+2. Suggest alternatives if applicable
+3. Note any missing considerations
+4. Provide your assessment: agree, disagree, or partially agree
+PROMPT_EOF
+
+# 2. Run codex with the prompt file
+codex exec "$(cat "$PROMPT_FILE")"
+
+# 3. Clean up
+rm -f "$PROMPT_FILE"
 ```
+
+**Why temp files?** Complex prompts with quotes, newlines, code blocks, and special characters break when passed directly on the command line.
 
 ### Step 3: Compare Results
 
