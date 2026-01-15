@@ -29,56 +29,65 @@ if ! command -v codex &>/dev/null; then
 fi
 ```
 
-### Step 2: Run Appropriate Codex Command
+### Step 2: Choose the Right Codex Command
 
-**IMPORTANT:** Always use stdin (`-`) for prompts to avoid shell escaping issues.
+## DEFAULT TO `codex exec` - ALMOST ALWAYS THE RIGHT CHOICE
 
-**For code review (actual diffs) - use Bash tool:**
+`codex exec` is the preferred command for nearly all peer review scenarios. It gives you precise control over what gets analyzed and avoids runaway reviews of entire branches.
+
+**Only use `codex review` when:**
+- User explicitly says "review the entire branch" → `--base`
+- User explicitly says "review all uncommitted changes" → `--uncommitted`
+- User explicitly says "review this commit" → `--commit <sha>`
+
+**Use `codex exec` for everything else**, including:
+- Reviewing specific files or functions
+- Validating designs or architecture decisions
+- Checking specific code for bugs or issues
+- Cross-checking Claude's analysis
+- Any focused or scoped review request
+
+**IMPORTANT:** Always use stdin/temp files for prompts to avoid shell escaping issues.
+
+---
+
+**For almost all reviews (DEFAULT):**
 ```bash
-# Write review instructions to temp file, then pipe to codex
+# Use codex exec when user asks about something specific
 PROMPT_FILE=$(mktemp /tmp/codex-prompt-XXXXXX.md)
 cat > "$PROMPT_FILE" <<'PROMPT_EOF'
-Focus on:
-- Code quality and maintainability
-- Performance issues
-- Transaction handling
-- Potential bugs
-- Missing edge cases
+Review the following code/changes for:
+- [Specific concern from user's request]
+- Code quality and potential bugs
+- Edge cases
 
-[Add any specific areas Claude identified for review]
+[Paste the specific code or describe the specific changes here]
 PROMPT_EOF
 
-# Use `-` to read prompt from stdin
-codex review --base [branch] - < "$PROMPT_FILE"
-
-rm -f "$PROMPT_FILE"
-```
-
-**For design/architecture/questions - use Bash tool:**
-```bash
-# Write validation request to temp file
-PROMPT_FILE=$(mktemp /tmp/codex-prompt-XXXXXX.md)
-cat > "$PROMPT_FILE" <<'PROMPT_EOF'
-## Validation Request
-
-[Claude's position/design/recommendation goes here - can include
-multiline content, code blocks, special characters, etc.]
-
-## Your Task
-
-1. Identify any issues, risks, or gaps
-2. Suggest alternatives if applicable
-3. Note any missing considerations
-4. Provide your assessment: agree, disagree, or partially agree
-PROMPT_EOF
-
-# Use stdin for the prompt
 codex exec "$(cat "$PROMPT_FILE")"
-
 rm -f "$PROMPT_FILE"
 ```
 
-**Why stdin/temp files?** Command-line arguments with quotes, newlines, or special characters cause shell escaping failures. Using `-` to read from stdin (for `review`) or `$(cat file)` (for `exec`) avoids these issues.
+---
+
+## `codex review` - ONLY when user explicitly requests these specific scopes:
+
+**"Review all my uncommitted changes":**
+```bash
+codex review --uncommitted
+```
+
+**"Review the entire feature branch":**
+```bash
+codex review --base [branch]
+```
+
+**"Review this specific commit":**
+```bash
+codex review --commit [sha]
+```
+
+**Why stdin/temp files?** Command-line arguments with quotes, newlines, or special characters cause shell escaping failures.
 
 ### Step 3: Compare Results
 
