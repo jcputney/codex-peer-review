@@ -34,6 +34,10 @@ npm i -g @openai/codex
 codex login
 ```
 
+**Optional - Perplexity MCP (for escalation):**
+
+When Claude and Codex disagree and can't resolve through discussion, the plugin escalates to external research. If you have [Perplexity MCP](https://github.com/ppl-ai/modelcontextprotocol) configured, it will be used for expert arbitration. Otherwise, the plugin falls back to WebSearch.
+
 ## How Peer Review Works
 
 1. **Claude Forms Opinion**: Claude analyzes the task and forms a recommendation
@@ -42,20 +46,20 @@ codex login
 4. **Resolution**:
    - **Agreement**: Synthesize and present combined view
    - **Disagreement**: Enter 2-round discussion protocol
-   - **Persistent Conflict**: Escalate to Perplexity for arbitration
+   - **Persistent Conflict**: Escalate to Perplexity (or WebSearch) for arbitration
 
 ## codex-peer-review Features
 
-- **Automatic Peer Review**: Auto-triggers before Claude presents implementation plans, code reviews, or architecture recommendations
+- **Automatic Reminders**: Reminds Claude to run peer review before presenting implementation plans, code reviews, or architecture recommendations
 - **Structured Disagreement Resolution**: 2-round discussion protocol with evidence-based arguments
-- **Perplexity Arbitration**: Expert escalation for unresolved disputes or security concerns
+- **Expert Arbitration**: Escalates to Perplexity MCP (or WebSearch fallback) for unresolved disputes or security concerns
 - **Slash Command**: Explicit `/codex-peer-review` command for on-demand validation
 
 ### Usage
 
 #### Automatic Mode
 
-The plugin automatically triggers peer review when Claude is about to present:
+The plugin reminds Claude to trigger peer review when about to present:
 - Implementation plans or designs
 - Code review results
 - Architecture recommendations
@@ -105,7 +109,9 @@ agent-peer-review/
         │   └── codex-peer-review.md
         └── hooks/
             ├── hooks.json
-            └── peer-review-reminder.sh
+            ├── peer-review-reminder.sh
+            ├── stop-peer-review-check.sh
+            └── plan-peer-review-check.sh
 ```
 
 ## Architecture
