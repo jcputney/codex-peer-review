@@ -31,17 +31,32 @@ fi
 
 ### Step 2: Run Appropriate Codex Command
 
-**IMPORTANT:** Always write complex prompts to a temp file to avoid shell escaping issues.
+**IMPORTANT:** Always use stdin (`-`) for prompts to avoid shell escaping issues.
 
-**For code review (actual diffs):**
+**For code review (actual diffs) - use Bash tool:**
 ```bash
-codex review --base [branch]
+# Write review instructions to temp file, then pipe to codex
+PROMPT_FILE=$(mktemp /tmp/codex-prompt-XXXXXX.md)
+cat > "$PROMPT_FILE" <<'PROMPT_EOF'
+Focus on:
+- Code quality and maintainability
+- Performance issues
+- Transaction handling
+- Potential bugs
+- Missing edge cases
+
+[Add any specific areas Claude identified for review]
+PROMPT_EOF
+
+# Use `-` to read prompt from stdin
+codex review --base [branch] - < "$PROMPT_FILE"
+
+rm -f "$PROMPT_FILE"
 ```
 
-**For design/architecture/questions (use Bash tool for ALL of this):**
+**For design/architecture/questions - use Bash tool:**
 ```bash
-# 1. Write prompt to temp file using Bash (NOT the Write tool)
-#    This works even in plan mode since it's a shell redirect
+# Write validation request to temp file
 PROMPT_FILE=$(mktemp /tmp/codex-prompt-XXXXXX.md)
 cat > "$PROMPT_FILE" <<'PROMPT_EOF'
 ## Validation Request
@@ -57,14 +72,13 @@ multiline content, code blocks, special characters, etc.]
 4. Provide your assessment: agree, disagree, or partially agree
 PROMPT_EOF
 
-# 2. Run codex with the prompt file
+# Use stdin for the prompt
 codex exec "$(cat "$PROMPT_FILE")"
 
-# 3. Clean up
 rm -f "$PROMPT_FILE"
 ```
 
-**Why temp files?** Complex prompts with quotes, newlines, code blocks, and special characters break when passed directly on the command line.
+**Why stdin/temp files?** Command-line arguments with quotes, newlines, or special characters cause shell escaping failures. Using `-` to read from stdin (for `review`) or `$(cat file)` (for `exec`) avoids these issues.
 
 ### Step 3: Compare Results
 
