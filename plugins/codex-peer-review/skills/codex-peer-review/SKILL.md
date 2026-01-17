@@ -1,6 +1,6 @@
 ---
 name: codex-peer-review
-description: Use when completing implementation tasks and wanting a second opinion from Codex CLI, after major feature work, or when existing code-reviewer identifies issues needing external validation
+description: This skill should be invoked BEFORE presenting implementation plans, architecture recommendations, code review findings, or answers to broad technical questions. Use proactively when about to "recommend", "suggest", "propose", "design", "plan", or answer "how should", "what's the best way", "which approach". MANDATORY for multi-file changes, refactoring proposals, and security-sensitive recommendations.
 allowed-tools:
   - Bash(codex:*)
   - Bash(mktemp:*)

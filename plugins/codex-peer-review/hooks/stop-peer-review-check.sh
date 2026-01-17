@@ -1,21 +1,29 @@
 #!/bin/bash
-# Stop hook: Remind Claude to verify peer review was performed when needed
+# Stop hook: STRONGLY remind Claude to verify peer review was performed
 
 cat << 'EOF'
-## Peer Review Verification
+## ⚠️ STOP - Peer Review Verification Required
 
-Before completing this response, verify:
+**BEFORE you complete this response, answer these questions:**
 
-**Did this response include any of these?**
-- Implementation plan or design proposal
-- Code review findings
-- Architecture recommendation
-- Answer to a broad technical question
-- Major refactoring suggestion
+### 1. Did your response include ANY of these?
+- [ ] Implementation plan or design
+- [ ] Code review findings
+- [ ] Architecture recommendation
+- [ ] Multi-file code changes
+- [ ] Answer to "how should I..." or "what's the best way to..."
 
-**If YES:** Did you dispatch to the `codex-peer-review:codex-peer-reviewer` agent for validation?
+### 2. If YES to any above: Did you dispatch to `codex-peer-review:codex-peer-reviewer`?
 
-**If you forgot:** Consider whether the response would benefit from peer review before the user acts on it. You can still invoke the peer review agent now.
+**If NO - you MUST do one of these NOW:**
+1. **Dispatch peer review:** Use Task tool with `subagent_type="codex-peer-review:codex-peer-reviewer"`
+2. **Explain skip:** Add a note: "Skipping peer review because: [trivial change / user declined / already validated]"
 
-**If peer review was skipped intentionally:** That's fine for trivial tasks, quick questions, or when the user explicitly declined.
+### 3. Acceptable reasons to skip:
+- Single-line fixes or typo corrections
+- User explicitly said "skip peer review" or "just do it"
+- Pure information lookup (no recommendations)
+- Following up on already-reviewed work
+
+**Do NOT proceed without either peer review or explicit justification.**
 EOF
