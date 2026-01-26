@@ -1,18 +1,21 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "agent-peer-review-marketplace",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Marketplace for AI-to-AI peer review plugins. Multiple perspectives catch more issues than one.",
   "owner": {
-    "name": "jcputney"
+    "name": "jcputney",
+    "url": "https://github.com/jcputney"
   },
+  "repository": "https://github.com/jcputney/agent-peer-review",
   "plugins": [
     {
       "name": "codex-peer-review",
       "version": "1.0.4",
       "description": "Peer validation system using OpenAI Codex CLI. Two AI perspectives catch more issues than one.",
       "author": {
-        "name": "jcputney"
+        "name": "jcputney",
+        "url": "https://github.com/jcputney"
       },
       "source": "./plugins/codex-peer-review",
       "category": "code-quality",
