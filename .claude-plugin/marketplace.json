@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "codex-peer-review",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "description": "Peer validation system using OpenAI Codex CLI. Two AI perspectives catch more issues than one.",
       "author": {
         "name": "jcputney"
