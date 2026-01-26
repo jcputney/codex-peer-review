@@ -3,6 +3,7 @@ name: codex-peer-reviewer
 description: Use this agent to run peer review validation with Codex CLI. Dispatches to a separate context to keep the main conversation clean. Returns synthesized peer review results.
 model: sonnet
 color: cyan
+permissionMode: bypassPermissions
 skills:
   - codex-peer-review
 allowed-tools:
